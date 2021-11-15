@@ -35,7 +35,7 @@ class ContactFormView(HttpRequest):
         return render(request, '', {'form': form})
 
     def process_form(request):
-        form = ContactForm()
+        form = ContactForm(request.POST)
         if form.is_valid():
             form.save()
             form = ContactForm()
