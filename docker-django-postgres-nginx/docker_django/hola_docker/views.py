@@ -1,43 +1,33 @@
 from django.shortcuts import render
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponseRedirect
+from django.urls import reverse
 
 from .models import ContactForm
 
-# Create your views here.
 
 def index(request):
     return render(request, 'index.html')
 
+
 def nosotros(request):
     return render(request, 'Nosotros.html')
 
-def contacto(request):
-    return render(request, 'Contacto.html')
 
 def home(request):
     return render(request, 'Home.html')
 
-def ContactForm(request):
-    if request.method == "POST":
-        address = request.POST["txtAddress"]
-        name = request.POST["txtName"]
-        phone = request.POST["txtPhone"]
-        date = request.POST["txtDate"]
-        message = request.POST["txtMessage"]
-        return render(request, 'index.html')
-    return render(request, 'Contacto.html')
 
-
-class ContactFormView(HttpRequest):
-
-    def contact(request):
-        form = ContactForm()
-        return render(request, '', {'form': form})
-
-    def process_form(request):
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            form.save()
+def sendform(request):
+    if request.method == 'POST':
+        if request.POST.get('email') and request.POST.get('name') and request.POST.get('phone') and\
+                request.POST.get('date') and request.POST.get('message-1'):
             form = ContactForm()
-
-        return render(request, 'index.html', {'form': form, 'message': 'OK'})
+            form.address = request.POST.get('email')
+            form.name = request.POST.get('name')
+            form.phone = request.POST.get('phone')
+            form.date = request.POST.get('date')
+            form.message = request.POST.get('message-1')
+            form.save()
+            return HttpResponseRedirect(reverse('Home'))
+    else:
+        return render(request, 'Contacto.html')

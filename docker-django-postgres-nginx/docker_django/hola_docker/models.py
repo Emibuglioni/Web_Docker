@@ -4,7 +4,7 @@ from django.db import models
 class ContactForm(models.Model):
     address = models.TextField()
     name = models.CharField(max_length=40)
-    phone = models.IntegerField()
+    phone = models.TextField()
     date = models.DateTimeField()
     message = models.TextField()
 
